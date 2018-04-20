@@ -13,8 +13,10 @@ xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 
 docker run -ti \
     --name pycharm_archlinux_2x \
-    -v $XSOCK:$XSOCK \
+    -v $XSOCK:$XSOCK:rw \
     -v $XAUTH:$XAUTH \
-    -v /mnt/veracrypt1/ebadu_pro:/home/user/ebadu_pro \
     -e XAUTHORITY=$XAUTH \
+    -e DISPLAY \
+    -v /mnt/veracrypt1/ebadu_pro:/home/user/ebadu_pro \
+    -v /home/izik/dotfiles/pycharm:/home/user/pycharm_config \
 	pycharm_archlinux
