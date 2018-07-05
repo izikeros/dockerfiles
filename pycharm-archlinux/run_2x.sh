@@ -18,5 +18,6 @@ docker run -ti \
     -e XAUTHORITY=$XAUTH \
     -e DISPLAY \
     -v /mnt/veracrypt1/ebadu_pro:/home/user/ebadu_pro \
+    -v /home/izik/src/:/home/user/src \
     -v /home/izik/dotfiles/pycharm:/home/user/pycharm_config \
 	pycharm_archlinux

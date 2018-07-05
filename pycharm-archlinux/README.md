@@ -20,3 +20,4 @@ docker run \
 docker start pycharm_archlinux_2x
 ```
 
+if needed (GUI not starting) try to remove docker xauth directory from /tmp

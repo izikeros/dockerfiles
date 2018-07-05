@@ -1,6 +1,8 @@
 # based on docker-archlinux-pycharm-professional from dockerhub
-FROM archlinux-with-yaourt
+FROM archlinux_with_yaourt
 
+# upgrade system
+RUN sudo pacman -Syu
 
 # install pycharm
 RUN sudo pacman --noconfirm -Sy python2 python2-pip python3 python-pip
