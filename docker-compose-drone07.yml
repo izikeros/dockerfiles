@@ -1,0 +1,66 @@
+version: '2'
+
+volumes:
+  gitea-data:
+  db:
+  drone-db:
+
+networks:
+  default:
+    external:
+      name: ${DEFAULT_NETWORK}
+
+services:
+  gitea-server:
+    image: gitea/gitea:latest
+    ports:
+      - 8380:3000
+    volumes:
+      - gitea-data:/data
+      - ./data:/data/gitea
+    restart: always
+    external_links:
+      - gitea-db
+    depends_on:
+      - gitea-db
+
+  gitea-db:
+    image: postgres:alpine
+    ports:
+      - 5440:5432
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=gitea
+
+  drone-server:
+    image: drone/drone:0.7
+    ports:
+      - 8381:8000
+    volumes:
+      - drone-db:/var/lib/drone/
+    restart: always
+    environment:
+      - DRONE_OPEN=true
+      - DRONE_HOST=http://drone-server:8381
+      - DRONE_SECRET=test
+      - DRONE_GITEA=true
+      - DRONE_GITEA_URL=http://gitea-server:3000/
+      - DRONE_NETWORK=${DEFAULT_NETWORK}
+    depends_on:
+      - gitea-server
+
+  drone-agent:
+    image: drone/drone:0.7
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=ws://drone-server:8000/ws/broker
+      - DRONE_SECRET=test
+
